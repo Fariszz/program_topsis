@@ -67,7 +67,7 @@ class TopsisTestController extends Controller
                 $normalizedValue[$alternativeId][$criteriaId] = number_format($value / $divider[$criteriaId], 3);
             }
         }
-        
+
         return [
             'divider' => $divider,
             'normalizedValue' => $normalizedValue,

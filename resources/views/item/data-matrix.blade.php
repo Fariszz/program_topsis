@@ -19,7 +19,7 @@
                                     @foreach ($criterias as $item)
                                     <th>C{{ $loop->iteration }}</th>
                                     @endforeach
-                                    <th></th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -36,6 +36,13 @@
                                         <span>{{ $value->value }}</span>
                                     </td>
                                     @endforeach
+                                    <td>
+                                        <form action="{{ route('delete-data', $item->id) }}" method="post">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </td>
                                 </tr>
                                 @endforeach
                                 <tr>

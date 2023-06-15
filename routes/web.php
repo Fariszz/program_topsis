@@ -25,3 +25,6 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 // Route::get('/ranking-list', [TopsisController::class, 'calculate'])->name('ranking-list');
 Route::get('/test', [TopsisTestController::class, 'index'])->name('test');
+Route::get('/add-data', [TopsisController::class, 'addData'])->name('add-data.get');
+Route::post('/add-data', [TopsisController::class, 'addCriteriaValue'])->name('add-data.post');
+Route::delete('/delete-data/{id}', [TopsisController::class, 'delete'])->name('delete-data');

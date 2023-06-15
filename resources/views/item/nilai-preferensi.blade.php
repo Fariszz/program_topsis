@@ -30,11 +30,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($closenessCoefficient as $key => $item)
+                                @foreach ($dataKedekatan as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>Alternative {{ $key }}</td>
-                                    <td>{{ $item }}</td>
+                                    <td>{{ $item['alternative'] }}</td>
+                                    <td>{{ $item['value']}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -54,11 +54,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($sortData as $key => $item)
+                                @foreach ($dataKedekatanSort as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>Alternative {{ $key }}</td>
-                                    <td>{{ $item }}</td>
+                                    <td>{{ $item['alternative'] }}</td>
+                                    <td>{{ $item['value']}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

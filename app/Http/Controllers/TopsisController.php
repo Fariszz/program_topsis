@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddCriteriaValueRequest;
 use App\Models\Alternative;
 use App\Models\AlternativeValue;
 use App\Models\Criteria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TopsisController extends Controller
 {
@@ -37,6 +39,9 @@ class TopsisController extends Controller
         $positiveNegative = $this->mergePositiveNegative($data5, $data6);
         $positiveNegativeIdeal = $this->mergePositiveNegative($data3, $data4);
 
+        $dataKedekatan = $this->getNameAlternative($data7);
+        $dataKedekatanSort = $this->getNameAlternative($data8);
+
         return view('ranking-list',[
             'data' => $data,
             'criterias' => $criterias,
@@ -51,20 +56,8 @@ class TopsisController extends Controller
             'sortData' => $data8,
             'positiveNegative' => $positiveNegative,
             'positiveNegativeIdeal' => $positiveNegativeIdeal,
-        ]);
-    }
-
-    public function criteria(Request $request) {
-        $request->validate([
-            'name' => 'required',
-            'weight' => 'required',
-            'categories' => 'required',
-        ]);
-
-        Criteria::create([
-            'name' => $request->name,
-            'weight' => $request->weight,
-            'categories' => $request->categories,
+            'dataKedekatan' => $dataKedekatan,
+            'dataKedekatanSort' => $dataKedekatanSort,
         ]);
     }
 
@@ -112,4 +105,155 @@ class TopsisController extends Controller
         return $data;
     }
 
+    public function addData() {
+        $criteria2 = [
+            ['value' => '2017', 'label' => '2017'],
+            ['value' => '2018', 'label' => '2018'],
+            ['value' => '2019', 'label' => '2019'],
+            ['value' => '2020', 'label' => '2020'],
+            ['value' => '2021', 'label' => '2021'],
+        ];
+
+        $criteria3 = [
+            ['value' => 'Sneakers', 'label' => 'Sneakers'],
+            ['value' => 'SlipOn', 'label' => 'Slip On (Tanpa Tali)'],
+            ['value' => 'LowCut', 'label' => 'Low Cut'],
+            ['value' => 'HighCut', 'label' => 'High Cut'],
+            ['value' => 'Heels', 'label' => 'Wedges / Heels'],
+        ];
+
+        $criteria4 = [
+            ['value' => 'Casual', 'label' => 'Casual (Sehari-hari)'],
+            ['value' => 'Training', 'label' => 'Running'],
+            ['value' => 'Sporty', 'label' => 'Sporty'],
+            ['value' => 'Formal', 'label' => 'Formal'],
+        ];
+
+        $criteria5 = [
+            ['value' => 'Tekstil', 'label' => 'Tekstil'],
+            ['value' => 'Canvas', 'label' => 'Canvas'],
+            ['value' => 'Sintetis', 'label' => 'Sintetis'],
+            ['value' => 'Mesh', 'label' => 'Mesh'],
+            ['value' => 'Knit', 'label' => 'Knit'],
+            ['value' => 'Leather', 'label' => 'Leather'],
+            ['value' => 'Suede', 'label' => 'Suede'],
+        ];
+
+        $criteria6 = [
+            ['value' => 'Normal', 'label' => 'Harga Normal'],
+            ['value' => 'Diskon', 'label' => 'Harga Diskon']
+        ];
+
+        $criteria7 = [
+            ['value' => 'Unisex', 'label' => 'Unisex'],
+            ['value' => 'Man', 'label' => 'Man'],
+            ['value' => 'Woman', 'label' => 'Woman'],
+        ];
+
+        return view('form.add-data',[
+            'criteria2' => $criteria2,
+            'criteria3' => $criteria3,
+            'criteria4' => $criteria4,
+            'criteria5' => $criteria5,
+            'criteria6' => $criteria6,
+            'criteria7' => $criteria7,
+        ]);
+    }
+
+    public function addCriteriaValue(AddCriteriaValueRequest $request) {
+        // $request->all();
+        $criteria1 = $request->addCriteria1($request->c1);
+        $criteria2 = $request->addCriteria2($request->c2);
+        $criteria3 = $request->addCriteria3($request->c3);
+        $criteria4 = $request->addCriteria4($request->c4);
+        $criteria5 = $request->addCriteria5($request->c5);
+        $criteria6 = $request->addCriteria6($request->c6);
+        $criteria7 = $request->addCriteria7($request->c7);
+
+        DB::beginTransaction();
+
+        try {
+            $alternative = Alternative::create([
+                'name' => $request->name,
+            ]);
+
+            AlternativeValue::create([
+                'alternative_id' => $alternative->id,
+                'criteria_id' => 1,
+                'value' => $criteria1,
+            ]);
+
+            AlternativeValue::create([
+                'alternative_id' => $alternative->id,
+                'criteria_id' => 2,
+                'value' => $criteria2,
+            ]);
+
+            AlternativeValue::create([
+                'alternative_id' => $alternative->id,
+                'criteria_id' => 3,
+                'value' => $criteria3,
+            ]);
+
+            AlternativeValue::create([
+                'alternative_id' => $alternative->id,
+                'criteria_id' => 4,
+                'value' => $criteria4,
+            ]);
+
+            AlternativeValue::create([
+                'alternative_id' => $alternative->id,
+                'criteria_id' => 5,
+                'value' => $criteria5,
+            ]);
+
+            AlternativeValue::create([
+                'alternative_id' => $alternative->id,
+                'criteria_id' => 6,
+                'value' => $criteria6,
+            ]);
+
+            AlternativeValue::create([
+                'alternative_id' => $alternative->id,
+                'criteria_id' => 7,
+                'value' => $criteria7,
+            ]);
+
+
+            DB::commit();
+            return redirect()->to('/')->with('success', 'Data berhasil ditambahkan');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+            return redirect()->to('/add-data')->with('error', 'Data gagal ditambahkan');
+        }
+    }
+
+    public function getNameAlternative(array $data)  {
+        $kedekatan = [];
+        foreach ($data as $key => $value) {
+            $kedekatan[] = [
+                'alternative_id' => $key,
+                'value' => $value,
+            ];
+        }
+
+        $dataKedekatan = [];
+        foreach ($kedekatan as $key => $value) {
+            $dataKedekatan[] = [
+                'alternative_id' => $value['alternative_id'],
+                'value' => $value['value'],
+                'alternative' => Alternative::find($value['alternative_id'])->name,
+            ];
+        }
+
+        return $dataKedekatan;
+    }
+
+    public function delete($id) {
+        $alternative = Alternative::findOrFail($id);
+        $alternative->delete();
+
+        return redirect()->to('/')->with('success', 'Data berhasil dihapus');
+    }
 }
