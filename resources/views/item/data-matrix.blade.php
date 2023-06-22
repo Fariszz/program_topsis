@@ -36,12 +36,30 @@
                                         <span>{{ $value->value }}</span>
                                     </td>
                                     @endforeach
-                                    <td>
+                                    {{-- <td>
                                         <form action="{{ route('delete-data', $item->id) }}" method="post">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger">Delete</button>
                                         </form>
+                                    </td> --}}
+                                    <td class="tb-tnx-action">
+                                        <div class="dropdown">
+                                            <a class="text-soft dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
+                                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-xs">
+                                                <ul class="link-list-plain">
+                                                    <li><a href="{{ route('edit-data.get', $item->id) }}">Edit</a></li>
+                                                    <li>
+                                                        <form action="{{ route('delete-data', $item->id) }}" method="post" id="delete-form-{{ $item->id }}" style="display: none">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                        </form>
+                                                        <a href="{{ route('delete-data', $item->id) }}"  onclick="event.preventDefault();
+                                                        document.getElementById('delete-form-{{ $item->id }}').submit();">Remove</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                                 @endforeach

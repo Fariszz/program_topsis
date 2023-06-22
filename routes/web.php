@@ -27,4 +27,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/test', [TopsisTestController::class, 'index'])->name('test');
 Route::get('/add-data', [TopsisController::class, 'addData'])->name('add-data.get');
 Route::post('/add-data', [TopsisController::class, 'addCriteriaValue'])->name('add-data.post');
+Route::get('/edit-data/{id}', [TopsisController::class, 'editData'])->name('edit-data.get');
+Route::put('/edit-data/{id}', [TopsisController::class, 'updateCriteriaValue'])->name('edit-data.put');
 Route::delete('/delete-data/{id}', [TopsisController::class, 'delete'])->name('delete-data');

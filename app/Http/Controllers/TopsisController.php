@@ -124,7 +124,8 @@ class TopsisController extends Controller
 
         $criteria4 = [
             ['value' => 'Casual', 'label' => 'Casual (Sehari-hari)'],
-            ['value' => 'Training', 'label' => 'Running'],
+            ['value' => 'Training', 'label' => 'Training'],
+            ['value' => 'Running', 'label' => 'Running'],
             ['value' => 'Sporty', 'label' => 'Sporty'],
             ['value' => 'Formal', 'label' => 'Formal'],
         ];
@@ -150,7 +151,66 @@ class TopsisController extends Controller
             ['value' => 'Woman', 'label' => 'Woman'],
         ];
 
-        return view('form.add-data',[
+        return view('form.add-data-content',[
+            'criteria2' => $criteria2,
+            'criteria3' => $criteria3,
+            'criteria4' => $criteria4,
+            'criteria5' => $criteria5,
+            'criteria6' => $criteria6,
+            'criteria7' => $criteria7,
+        ]);
+    }
+
+    public function editData($id){
+        $criteria2 = [
+            ['value' => '10', 'label' => '2017'],
+            ['value' => '20', 'label' => '2018'],
+            ['value' => '30', 'label' => '2019'],
+            ['value' => '40', 'label' => '2020'],
+            ['value' => '50', 'label' => '2021'],
+        ];
+
+        $criteria3 = [
+            ['value' => '50', 'label' => 'Sneakers'],
+            ['value' => '40', 'label' => 'Slip On (Tanpa Tali)'],
+            ['value' => '30', 'label' => 'Low Cut'],
+            ['value' => '20', 'label' => 'High Cut'],
+            ['value' => '10', 'label' => 'Wedges / Heels'],
+        ];
+
+        $criteria4 = [
+            ['value' => '50', 'label' => 'Casual (Sehari-hari)'],
+            ['value' => '40', 'label' => 'Running'],
+            ['value' => '30', 'label' => 'Training'],
+            ['value' => '20', 'label' => 'Sporty'],
+            ['value' => '10', 'label' => 'Formal'],
+        ];
+
+        $criteria5 = [
+            ['value' => '70', 'label' => 'Tekstil'],
+            ['value' => '60', 'label' => 'Canvas'],
+            ['value' => '50', 'label' => 'Sintetis'],
+            ['value' => '40', 'label' => 'Mesh'],
+            ['value' => '30', 'label' => 'Knit'],
+            ['value' => '20', 'label' => 'Leather'],
+            ['value' => '10', 'label' => 'Suede'],
+        ];
+
+        $criteria6 = [
+            ['value' => '10', 'label' => 'Harga Normal'],
+            ['value' => '20', 'label' => 'Harga Diskon']
+        ];
+
+        $criteria7 = [
+            ['value' => '30', 'label' => 'Unisex'],
+            ['value' => '20', 'label' => 'Man'],
+            ['value' => '10', 'label' => 'Woman'],
+        ];
+
+        $data = Alternative::with('values')->findOrFail($id);
+
+        return view('form.edit-data-content',[
+            'data' => $data,
             'criteria2' => $criteria2,
             'criteria3' => $criteria3,
             'criteria4' => $criteria4,
@@ -181,6 +241,7 @@ class TopsisController extends Controller
                 'alternative_id' => $alternative->id,
                 'criteria_id' => 1,
                 'value' => $criteria1,
+                
             ]);
 
             AlternativeValue::create([
@@ -226,6 +287,54 @@ class TopsisController extends Controller
             DB::rollBack();
             throw $e;
             return redirect()->to('/add-data')->with('error', 'Data gagal ditambahkan');
+        }
+    }
+
+    public function updateCriteriaValue(AddCriteriaValueRequest $request, $id){
+
+        $criteria1 = $request->addCriteria1($request->c1);
+        DB::beginTransaction();
+
+        try {
+            $alternative = Alternative::findOrFail($id);
+            $alternative->update([
+                'name' => $request->name,
+            ]);
+
+            $alternative->values()->where('criteria_id', 1)->update([
+                'value' => $criteria1,
+            ]);
+
+            $alternative->values()->where('criteria_id', 2)->update([
+                'value' => $request->c2,
+            ]);
+
+            $alternative->values()->where('criteria_id', 3)->update([
+                'value' => $request->c3,
+            ]);
+
+            $alternative->values()->where('criteria_id', 4)->update([
+                'value' => $request->c4,
+            ]);
+
+            $alternative->values()->where('criteria_id', 5)->update([
+                'value' => $request->c5,
+            ]);
+
+            $alternative->values()->where('criteria_id', 6)->update([
+                'value' => $request->c6,
+            ]);
+
+            $alternative->values()->where('criteria_id', 7)->update([
+                'value' => $request->c7,
+            ]);
+
+            DB::commit();
+            return redirect()->to('/')->with('success', 'Data berhasil diupdate');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+            return redirect()->to('/add-data')->with('error', 'Data gagal diupdate');
         }
     }
 

@@ -17,4 +17,9 @@ class Criteria extends Model
     {
         return $this->hasMany(AlternativeValue::class);
     }
+
+    public function CriteriaDetail()
+    {
+        return $this->hasMany(CriteriaDetail::class);
+    }
 }

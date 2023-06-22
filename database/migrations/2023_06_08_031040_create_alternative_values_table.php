@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('alternative_id')->constrained('alternatives')->onDelete('cascade');
             $table->foreignId('criteria_id')->constrained('criterias')->onDelete('cascade');
             $table->double('value', 8, 2);
+            $table->string('real_value', 255)->nullable();
             $table->timestamps();
         });
     }
